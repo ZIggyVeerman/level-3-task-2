@@ -1,9 +1,15 @@
 package com.example.studentportal
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_create_link.*
+import kotlinx.android.synthetic.main.activity_create_link.view.*
+import java.net.URL
+
+var newLinkList = ArrayList<Link>()
 
 class CreateLink : AppCompatActivity() {
 
@@ -21,11 +27,26 @@ class CreateLink : AppCompatActivity() {
     }
 
     private fun onConfirmClick() {
-      // mis even level 1 checken
+      val linkList = intent.getParcelableArrayListExtra<Link>(SECOND_DATA)
 
-//      val profileActivityIntent = Intent(this, ProfileActivity::class.java)
-//      profileActivityIntent.putExtra(ProfileActivity.PROFILE_EXTRA, profile)
-//      startActivity(profileActivityIntent)
+      val link = Link(
+        etLinkName.text.toString(),
+        etUrl.text.toString()
+      )
+
+      if(linkList != null){
+        linkList.add(link)
+
+        val linkIntent = Intent(this, MainActivity::class.java)
+        linkIntent.putExtra(MainActivity.DATA, linkList)
+        startActivity(linkIntent)
+      }
+
+      newLinkList.add(link)
+
+      val linkIntent = Intent(this, MainActivity::class.java)
+      linkIntent.putExtra(MainActivity.DATA, newLinkList)
+      startActivity(linkIntent)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -37,5 +58,10 @@ class CreateLink : AppCompatActivity() {
         else -> return super.onOptionsItemSelected(item)
       }
     }
+
+  companion object{
+    const val SECOND_DATA = "DATA"
+
+  }
 
 }
