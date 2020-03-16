@@ -8,8 +8,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.browser.customtabs.CustomTabsIntent.COLOR_SCHEME_SYSTEM
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,7 +17,7 @@ import kotlinx.android.synthetic.main.content_main.*
 class MainActivity : AppCompatActivity() {
 
   private val links : ArrayList<Link> = arrayListOf()
-  private val linkAdapter = LinkAdapter(links) { linkItem : Link -> linkItemClicked(linkItem)}
+  private val linkAdapter = LinkAdapter(links, ::linkItemClicked)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -67,26 +66,17 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  private fun createTestData() : List<Link> {
-    val linkedList = ArrayList<Link>()
-    linkedList.add(Link("A", "LED Green 568 nm, 5mm"))
-    linkedList.add(Link("AA", "Aluminium Capacitor 4.7μF"))
-    linkedList.add(Link("AAA", "Potentiometer 500kΩ"))
-    return linkedList
-  }
-
-
   private fun linkItemClicked(linkItem: Link) {
     Toast.makeText(this, "clicked: ${linkItem.name}", Toast.LENGTH_LONG).show()
+    openCustomTab(linkItem.url)
   }
 
   private fun openCustomTab(url: String) {
-    val intent: CustomTabsIntent = CustomTabsIntent.Builder()
-      .setToolbarColor(ResourcesCompat.getColor(resources, R.color.colorPrimary, null))
-      .setColorScheme(COLOR_SCHEME_SYSTEM)
-      .build()
+    val builder =  CustomTabsIntent.Builder()
+    builder.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
 
-    intent.launchUrl(this, Uri.parse(url))
+    val customTabsIntent = builder.build();
+    customTabsIntent.launchUrl(this, Uri.parse(url));
   }
 
   companion object{
