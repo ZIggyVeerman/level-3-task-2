@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.browser.customtabs.CustomTabsIntent.COLOR_SCHEME_SYSTEM
@@ -13,12 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.android.synthetic.main.item_view.*
 
 class MainActivity : AppCompatActivity() {
 
   private val links : ArrayList<Link> = arrayListOf()
-  private val linkAdapter = LinkAdapter(links)
+  private val linkAdapter = LinkAdapter(links) { linkItem : Link -> linkItemClicked(linkItem)}
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun initViews() {
     rvLinks.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-    rvLinks.adapter = linkAdapter
+    rvLinks.adapter =  linkAdapter
 
     val intent = intent
 
@@ -67,9 +67,17 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  private fun createTestData() : List<Link> {
+    val linkedList = ArrayList<Link>()
+    linkedList.add(Link("A", "LED Green 568 nm, 5mm"))
+    linkedList.add(Link("AA", "Aluminium Capacitor 4.7μF"))
+    linkedList.add(Link("AAA", "Potentiometer 500kΩ"))
+    return linkedList
+  }
 
-  private fun handleButtonAction(links: ArrayList<Link>) {
-    btLink.setOnClickListener{println(links)}
+
+  private fun linkItemClicked(linkItem: Link) {
+    Toast.makeText(this, "clicked: ${linkItem.name}", Toast.LENGTH_LONG).show()
   }
 
   private fun openCustomTab(url: String) {

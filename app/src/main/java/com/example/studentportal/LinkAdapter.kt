@@ -6,17 +6,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_view.view.*
 
-class LinkAdapter(private val links: List<Link>) :
-  RecyclerView.Adapter<LinkAdapter.ViewHolder>() {
+class LinkAdapter(private val links: List<Link>, private val clickListener: (Link) -> Unit) :
+  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-  inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(link: Link) {
+  inner class LinkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    fun bind(link: Link, clickListener: (Link) -> Unit) {
       itemView.btLink.text = link.name
+      itemView.setOnClickListener{ clickListener(link)}
     }
   }
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-    return ViewHolder(
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    return LinkViewHolder(
       LayoutInflater.from(parent.context).inflate(R.layout.item_view, parent, false)
     )
   }
@@ -25,7 +26,7 @@ class LinkAdapter(private val links: List<Link>) :
     return links.size
   }
 
-  override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-    holder.bind(links[position])
+  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    (holder as LinkViewHolder).bind(links[position], clickListener)
   }
 }
