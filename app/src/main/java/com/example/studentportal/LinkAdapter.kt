@@ -10,9 +10,9 @@ class LinkAdapter(private val links: List<Link>, private val clickListener: (Lin
   RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
   inner class LinkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(link: Link, clickListener: (Link) -> Unit) {
+    fun bind(link: Link) {
       itemView.btLink.text = link.name
-      itemView.setOnClickListener{ clickListener(link)}
+      itemView.btLink.setOnClickListener{ clickListener(link)}
     }
   }
 
@@ -27,6 +27,6 @@ class LinkAdapter(private val links: List<Link>, private val clickListener: (Lin
   }
 
   override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-    (holder as LinkViewHolder).bind(links[position], clickListener)
+    (holder as LinkViewHolder).bind(links[position])
   }
 }
