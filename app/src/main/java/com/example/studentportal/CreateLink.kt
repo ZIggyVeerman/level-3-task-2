@@ -13,53 +13,64 @@ var newLinkList = ArrayList<Link>()
 
 class CreateLink : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_link)
-        initViews()
-    }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_create_link)
+    initViews()
+  }
 
-    private fun initViews() {
-      supportActionBar?.setDisplayHomeAsUpEnabled(true)
-      supportActionBar?.title = "Create a Portal"
-      btConfirm.setOnClickListener { onConfirmClick() }
+  /**
+   * Initialize the Ui of the activity
+   */
+  private fun initViews() {
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    supportActionBar?.title = "Create a Portal"
+    // set click listener on the confirm button
+    btConfirm.setOnClickListener { onConfirmClick() }
 
-    }
+  }
 
-    private fun onConfirmClick() {
-      val linkList = intent.getParcelableArrayListExtra<Link>(SECOND_DATA)
-
-      val link = Link(
-        etLinkName.text.toString(),
-        etUrl.text.toString()
-      )
-
-      if(linkList != null){
-        linkList.add(link)
-
-        val linkIntent = Intent(this, MainActivity::class.java)
-        linkIntent.putExtra(MainActivity.DATA, linkList)
-        startActivity(linkIntent)
-      }
-
-      newLinkList.add(link)
-
+  /**
+   * handle the on confirm click
+   */
+  private fun onConfirmClick() {
+    // get the linked list from the previous activity
+    val linkList = intent.getParcelableArrayListExtra<Link>(SECOND_DATA)
+    // create new link
+    val link = Link(
+      etLinkName.text.toString(),
+      etUrl.text.toString()
+    )
+    // check if the linked listed received from the main activity contains a linkedlist
+    if (linkList != null) {
+      linkList.add(link)
+      // pas the linked list to the main activity intent
       val linkIntent = Intent(this, MainActivity::class.java)
-      linkIntent.putExtra(MainActivity.DATA, newLinkList)
+      linkIntent.putExtra(MainActivity.DATA, linkList)
       startActivity(linkIntent)
     }
+    // if linkedlist was null fill the new linkedlist
+    newLinkList.add(link)
+    // and pass that to the main activity
+    val linkIntent = Intent(this, MainActivity::class.java)
+    linkIntent.putExtra(MainActivity.DATA, newLinkList)
+    startActivity(linkIntent)
+  }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-      return when (item?.itemId) {
-        android.R.id.home -> {
-          finish()
-          true
-        }
-        else -> return super.onOptionsItemSelected(item)
+  /**
+   * handle the click on the back button
+   */
+  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    return when (item?.itemId) {
+      android.R.id.home -> {
+        finish()
+        true
       }
+      else -> return super.onOptionsItemSelected(item)
     }
+  }
 
-  companion object{
+  companion object {
     const val SECOND_DATA = "DATA"
 
   }
